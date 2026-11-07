@@ -31,7 +31,7 @@ Desde la terminal de cPanel, copia el script fuera de `public_soporte1` y dale
 permiso de ejecución:
 
 ```bash
-mkdir -p ~/scripts ~/logs
+mkdir -p ~/scripts ~/logs ~/repositories
 git clone https://github.com/rojedaweb/soporte1.git ~/repositories/soporte1
 cp ~/repositories/soporte1/deploy/deploy-cpanel.sh ~/scripts/deploy-soporte1.sh
 chmod 700 ~/scripts/deploy-soporte1.sh
