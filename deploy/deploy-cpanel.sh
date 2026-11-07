@@ -8,18 +8,18 @@ umask 077
 
 readonly REPO_URL="https://github.com/rojedaweb/soporte1.git"
 readonly BRANCH="main"
-readonly REPO_DIR="${HOME}/repositories/soporte1"
+readonly BASE_DIR="${HOME}/git_soporte1"
+readonly REPO_DIR="${BASE_DIR}/repo"
 readonly PUBLIC_DIR="${HOME}/public_soporte1"
-readonly STATE_DIR="${HOME}/.local/state/soporte1"
-readonly STATE_FILE="${STATE_DIR}/deployed-commit"
-readonly LOCK_FILE="${STATE_DIR}/deploy.lock"
+readonly STATE_FILE="${BASE_DIR}/ultimo_commit"
+readonly LOCK_FILE="${BASE_DIR}/deploy.lock"
 
 if [[ -z "${HOME}" || "${HOME}" == "/" || "${PUBLIC_DIR}" != "${HOME}/public_soporte1" ]]; then
   echo "ERROR: ruta de publicacion no valida: ${PUBLIC_DIR}" >&2
   exit 1
 fi
 
-mkdir -p "${REPO_DIR%/*}" "${PUBLIC_DIR}" "${STATE_DIR}"
+mkdir -p "${BASE_DIR}" "${PUBLIC_DIR}"
 
 # Evita que dos ejecuciones del cron desplieguen simultaneamente.
 exec 9>"${LOCK_FILE}"
@@ -40,22 +40,6 @@ if [[ "${current_commit}" == "${deployed_commit}" ]]; then
   exit 0
 fi
 
-if command -v composer >/dev/null 2>&1; then
-  composer_bin="$(command -v composer)"
-elif [[ -x /opt/cpanel/composer/bin/composer ]]; then
-  composer_bin="/opt/cpanel/composer/bin/composer"
-else
-  echo "ERROR: Composer no esta disponible en cPanel." >&2
-  exit 1
-fi
-
-"${composer_bin}" install \
-  --working-dir="${REPO_DIR}" \
-  --no-dev \
-  --prefer-dist \
-  --optimize-autoloader \
-  --no-interaction
-
 # Los archivos excluidos no se publican. config.local.php queda protegido y
 # no se elimina del destino aunque se utilice --delete.
 rsync -a --delete --delay-updates \
@@ -63,8 +47,6 @@ rsync -a --delete --delay-updates \
   --exclude='.gitattributes' \
   --exclude='.gitignore' \
   --exclude='README.md' \
-  --exclude='composer.json' \
-  --exclude='composer.lock' \
   --exclude='config.example.php' \
   --exclude='config.local.php' \
   --exclude='database/' \

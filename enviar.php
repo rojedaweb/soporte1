@@ -5,11 +5,8 @@
 $error= 0;
 
 //################################################################
-//PHPMailer - Cargamos la libería para enviar por SMTP
+//Configuración de la aplicación
 //################################################################
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-require 'vendor/autoload.php';
 
 //################################################################
 //Configuración local (excluida de Git)
@@ -25,11 +22,6 @@ $bbdd['db_table'] = $config['database']['name'];
 $bbdd['db_user'] = $config['database']['user'];
 $bbdd['db_pass'] = $config['database']['password'];
 
-$emailconf['use_smtp'] = $config['mail']['use_smtp'];
-$emailconf['server'] = $config['mail']['host'];
-$emailconf['user'] = $config['mail']['user'];
-$emailconf['pass'] = $config['mail']['password'];
-$emailconf['port'] = $config['mail']['port'];
 $emailconf['from_address'] = $config['mail']['from_address'];
 $emailconf['from_name'] = $config['mail']['from_name'];
 
@@ -49,7 +41,6 @@ if(mysqli_connect_errno()) {
 //################################################################
 $enviado = 0;
 //El email del remitente, modificarlo por la que creemos
-$remitente = 'soporte@dominio.com'; //<<<
 
 $nombre = trim($_POST['nombre'] ?? '');
 $direccion = trim($_POST['direccion'] ?? '');
@@ -76,13 +67,7 @@ if(
   //################################################################
   //Leer la imagen y codificarla en Base64
   //################################################################
-  $imagePath = $_SERVER['DOCUMENT_ROOT'] . '/img/logo-iesrincon-azul.png';
-  if (!file_exists($imagePath)) {
-      throw new Exception('La imagen no se encuentra en: ' . $imagePath);
-  }
-  $imageData = file_get_contents($imagePath);
-  $base64Image = base64_encode($imageData);
-  $mimeType = mime_content_type($imagePath);
+  $imagePath = __DIR__ . '/img/logo-iesrincon-azul.png';
 
   //################################################################
   //Se crean las variable que se usa en la función mail de PHP
@@ -91,7 +76,13 @@ if(
   $asunto = 'Nuevo ticket de soporte';
   //Se concatena una variable HTML con el contenido del correo
   $mensaje = '';
-  $mensaje .= '<br><img src="data:' . $mimeType . ';base64,' . $base64Image . '" width="100"><br><br>';
+  if (is_file($imagePath)) {
+    $imageData = file_get_contents($imagePath);
+    if ($imageData !== false) {
+      $base64Image = base64_encode($imageData);
+      $mensaje .= '<br><img src="data:image/png;base64,' . $base64Image . '" width="100" alt="IES El Rincón"><br><br>';
+    }
+  }
   $mensaje .= 'Hola, se ha creado el siguiente ticket de soporte.<br><br>';
   $mensaje .= '<br><strong>Empresa:</strong> '.htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8');
   $mensaje .= '<br><strong>Dirección:</strong> '.htmlspecialchars($direccion, ENT_QUOTES, 'UTF-8');
@@ -103,41 +94,22 @@ if(
   $mensaje .= '<br><strong>Fecha:</strong> '.@date('d/m/Y H:i:s');
   $mensaje .= '<br><strong>IP:</strong> '.@$_SERVER['REMOTE_ADDR'];
       
-  //Enviar el correo con PHPMailer
+  //Enviar el correo con la función mail() nativa de PHP
   //Si se manda correctamente pondrá en la variable enviado un 1 (true) 
-  $mail = new PHPMailer(true);
-  try {
-    // Configuración del servidor SMTP
-    if ($emailconf['use_smtp']) {
-      $mail->isSMTP();
-      $mail->Host = $emailconf['server'];
-      $mail->SMTPAuth = true;
-      $mail->Username = $emailconf['user'];
-      $mail->Password = $emailconf['pass'];
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      $mail->Port = $emailconf['port'];
-    }
+  $fromAddress = trim($emailconf['from_address']);
+  $fromName = str_replace(["\r", "\n"], '', $emailconf['from_name']);
 
-    // Configuración del correo
-    $mail->setFrom($emailconf['from_address'], $emailconf['from_name']);
-    $mail->addAddress($email);
-    $mail->Subject = $asunto;
-    //Establecer codificación UTF-8
-    $mail->CharSet = 'UTF-8';
-    
-    // Configurar el correo como HTML
-    $mail->isHTML(true); // Activar formato HTML
-    $mail->Body = $mensaje;
-    
-    // Enviar correo
-    if($mail->send()){
-     $enviado = 1;  
-    }else{
-      $enviado = 0;
-    }
-            
-  } catch (Exception $e) {
-    $enviado = 0;
+  if (filter_var($fromAddress, FILTER_VALIDATE_EMAIL)) {
+    $encodedFromName = '=?UTF-8?B?' . base64_encode($fromName) . '?=';
+    $encodedSubject = '=?UTF-8?B?' . base64_encode($asunto) . '?=';
+    $headers = [
+      'MIME-Version: 1.0',
+      'Content-Type: text/html; charset=UTF-8',
+      'From: ' . $encodedFromName . ' <' . $fromAddress . '>',
+      'Reply-To: ' . $fromAddress,
+    ];
+
+    $enviado = mail($email, $encodedSubject, $mensaje, implode("\r\n", $headers)) ? 1 : 0;
   }
   
 }
