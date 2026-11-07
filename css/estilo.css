@@ -1,0 +1,134 @@
+
+
+/*Importar fuentes de Google Fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&family=Roboto:wght@100;400;700&display=swap');
+
+
+
+/*Variable globales*/
+:root {
+  --fuente1: "Poppins", sans-serif;
+  --azul: #3498db;
+  --naranja: #ee6c02;
+}
+
+
+
+/*reset para comenzar*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/*estilo de cuerpo principal común para todo*/
+body {
+  font-family: var(--fuente1);
+  overflow-x: hidden;
+  transition: all 0.3s ease;
+}
+
+
+/*contenedor base*/
+.con_principal{
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: 100vh;
+  background-color: #f6f6f6;
+}
+.con_interior{
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.con_formulario{
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  text-align: center;
+}
+
+
+
+/*texto*/
+.txt_h1{
+  font-size: 2.0rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+
+
+
+
+/*Formularios*/
+.formulario_con{
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  font-size: 1.0rem;
+  font-family: var(--fuente1);
+}
+.input_txt{
+  display: inline-block;
+  box-sizing:border-box;
+  border: 1px solid #b7b7b7;
+  border-radius: 3px;
+	text-align:left;
+	color:#666;
+  text-overflow: clip;
+  background: rgba(252,252,252,1);
+  box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.66) ;
+  transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	width:100%;
+	padding: 10px 10px;
+  font-size: 1.0rem;
+  font-family: var(--fuente1);
+}
+.input_textarea{
+  display: inline-block;
+  box-sizing:border-box;
+  border: 1px solid #b7b7b7;
+  border-radius: 3px;
+	text-align:left;
+	color:#666;
+  text-overflow: clip;
+  background: rgba(252,252,252,1);
+  box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.66) ;
+  transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	width:100%;
+	padding: 10px 10px;
+  min-height: 100px;
+  font-size: 1.0rem;
+  font-family: var(--fuente1);
+}
+
+
+/*Botones*/
+.btn1{
+  display: inline-block;
+  color: #fff;
+  background-color: var(--azul);
+  cursor: pointer;
+  text-decoration: none !important;
+  padding: .375rem .75rem;
+  border-radius: 5px;
+  transition: all 0.3s;
+  border:0;
+  font-size: 1.0rem;
+  font-family: var(--fuente1);
+}
+.btn1:hover {
+  background-color: var(--naranja);
+}

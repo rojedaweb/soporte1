@@ -1,0 +1,11 @@
+/vendor/
+/config.local.php
+/.env
+/.env.*
+/*.log
+/.idea/
+/.vscode/
+/bdincidencias.gz
+.DS_Store
+Thumbs.db
+
