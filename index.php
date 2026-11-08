@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Integración - IES EL Rincón</title>
+  <title>Envío de incidencias - DPL Canarias</title>
   <link rel="stylesheet" href="/css/estilo.css">
 </head>
 
@@ -15,6 +15,7 @@
 
 <div class="con_principal">
   <div class="con_interior">
+    <img class="logo_formulario" src="/img/logo.png" alt="DPL Canarias">
     <h1 class="txt_h1">Envío de Incidencias</h1>
     <div class="con_formulario">
       <form name="form_empresas" action="/enviar.php" method="post">
