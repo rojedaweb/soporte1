@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Incidencia enviada - DPL Canarias</title>
-  <link rel="stylesheet" href="/css/estilo.css">
+  <link rel="stylesheet" href="/css/estilo.css?v=3">
 </head>
 <body class="pagina_estado">
   <main class="con_principal">
     <section class="con_interior tarjeta_estado estado_ok" aria-labelledby="titulo_estado">
-      <img class="estado_logo" src="/img/logo.png" alt="DPL Canarias">
+      <img class="estado_logo" src="/img/logo.png" width="112" height="112" alt="DPL Canarias">
       <div class="estado_icono" aria-hidden="true">✓</div>
       <h1 id="titulo_estado" class="estado_titulo">Incidencia enviada</h1>
       <p class="estado_mensaje">
